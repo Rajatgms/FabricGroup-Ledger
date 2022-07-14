@@ -1,0 +1,12 @@
+{
+  "name": "fabricgroup",
+  "version": "1.0.0",
+  "description": "Loan calculation - Loan, payment and balance",
+  "main": "index.js",
+  "scripts": {
+    "start": "node geektrust.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rajat",
+  "license": "ISC"
+}
