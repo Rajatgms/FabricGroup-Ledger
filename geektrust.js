@@ -46,7 +46,7 @@ function showBalance (balanceArgs) {
   const potentialPendingEmiCount = years * 12 - emiNumber - Math.floor(lumSumPaid / emi)
   const pendingEmiCount = potentialPendingEmiCount < 0 ? 0 : potentialPendingEmiCount
 
-  console.log('Balance Print - ', bankName, borrowerName, amountPaid, pendingEmiCount)
+  console.log(bankName, borrowerName, amountPaid, pendingEmiCount)
 
 }
 
