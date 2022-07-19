@@ -4,9 +4,15 @@
   "description": "Loan calculation - Loan, payment and balance",
   "main": "index.js",
   "scripts": {
-    "start": "node geektrust.js",
+    "clean": "rm -rf dist",
+    "install": "npx tsc",
+    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Rajat",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.0.6",
+    "typescript": "^4.7.4"
+  }
 }
