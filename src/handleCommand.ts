@@ -4,12 +4,13 @@ import PaymentController from './controllers/paymentController';
 import parsePaymentCommand from './transformer/parsePaymentCommand';
 import BalanceController from './controllers/balanceController';
 import parseBalanceCommand from './transformer/parseBalanceCommand';
+import { COMMAND_NOT_SUPPORTED, INVALID_COMMAND } from './constants/constants';
 
 const handleCommand = (command: string[]): void => {
   const [commandType, bankName, borrowerName] = command;
 
   if (!borrowerName && !bankName) {
-    console.log(`Command is invalid`);
+    console.log(INVALID_COMMAND);
     return;
   }
 
@@ -27,7 +28,7 @@ const handleCommand = (command: string[]): void => {
       balanceInstance.displayBalance();
       break;
     default:
-      console.log(`Command is not supported`);
+      console.log(COMMAND_NOT_SUPPORTED);
   }
 };
 

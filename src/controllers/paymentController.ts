@@ -1,6 +1,7 @@
 import { PaymentModel } from '../models/commandModel';
 import DbController from './dbController';
 import Base from './baseController';
+import { LUMP_SUM_EXCEED } from '../constants/constants';
 
 interface IPaymentController {
   lumpSumAmount: number,
@@ -30,7 +31,7 @@ class PaymentController extends Base implements IPaymentController {
       const pendingAmount = amount - (emiNumber * emi);
 
       if (lumpSumAmount > pendingAmount) {
-        console.log('WARNING Lump Sum Amount exceed the pending Amount');
+        console.log(LUMP_SUM_EXCEED);
       } else {
         dbInstance.addPaymentData(bankName, borrowerName, { lumpSumAmount, emiNumber });
       }

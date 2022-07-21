@@ -1,19 +1,24 @@
 import { LoanDataModel, LoansDataModel, PaymentDataModel, PaymentsDataModel } from '../models/dataModel';
-
-const loans: LoansDataModel = {};
-const payments: PaymentsDataModel = {};
+import database from '../db/database';
+import { LOAN_EXIST, LOAN_NOT_FOUND } from '../constants/constants';
 
 class DbController {
   loans: LoansDataModel;
   payments: PaymentsDataModel;
 
   constructor() {
-    this.loans = loans;
-    this.payments = payments;
+    this.loans = database.loans;
+    this.payments = database.payments;
   }
 
   addLoanData(bankName: string, borrowerName: string, loanData: LoanDataModel) {
     const { principal, noOfYears, rateOfInterest, amount, emi } = loanData;
+
+    if (this.loans[borrowerName] && this.loans[borrowerName][bankName]) {
+      console.log(LOAN_EXIST);
+      return;
+    }
+
     if (!this.loans[borrowerName]) {
       this.loans[borrowerName] = {};
     }
@@ -33,7 +38,7 @@ class DbController {
     if (this.loans[borrowerName] && this.loans[borrowerName][bankName]) {
       return this.loans[borrowerName][bankName];
     } else {
-      console.log(`Loan details is not present`);
+      console.log(LOAN_NOT_FOUND);
       return null;
     }
   }

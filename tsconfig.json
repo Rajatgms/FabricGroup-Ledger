@@ -7,6 +7,9 @@
     "sourceMap": true,
     "outDir": "dist"
   },
+  "exclude": [
+    "tests/**/*.spec.ts"
+  ],
   "lib": [
     "es2015"
   ]
