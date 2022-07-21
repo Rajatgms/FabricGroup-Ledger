@@ -2,11 +2,11 @@
   "name": "fabricgroup",
   "version": "1.0.0",
   "description": "Loan calculation - Loan, payment and balance",
-  "main": "index.js",
+  "main": "geektrust.ts",
   "scripts": {
     "clean": "rm -rf dist",
     "install": "npx tsc",
-    "start": "node dist/app.js",
+    "start": "node src/geektrust.js",
     "test": "jest --coverage"
   },
   "author": "Rajat",
