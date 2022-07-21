@@ -20,4 +20,4 @@ interface BalanceModel extends CommandModel {
   emiNumber: number,
 }
 
-export { CommandType, LoanModel, PaymentModel, BalanceModel };
+export { CommandType, CommandModel, LoanModel, PaymentModel, BalanceModel };

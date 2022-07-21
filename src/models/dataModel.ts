@@ -23,4 +23,4 @@ interface PaymentsDataModel {
   };
 }
 
-export { LoansDataModel, PaymentsDataModel };
+export { LoanDataModel, LoansDataModel, PaymentDataModel, PaymentsDataModel };

@@ -1,24 +1,46 @@
-import { loansData, paymentsData } from '../db/data';
+import DbController from './dbController';
 import { BalanceModel } from '../models/commandModel';
+import Base from './baseController';
 
-export const balanceController = (balance: BalanceModel): void => {
-  let { borrowerName, bankName, emiNumber } = balance;
+interface IBalanceController {
+  emiNumber: number,
+  displayBalance: () => void
+}
 
-  const { noOfYears, emi, amount } = loansData[borrowerName][bankName];
+class BalanceController extends Base implements IBalanceController {
+  emiNumber: number;
 
-  let lumSumPaid = 0;
-
-  if (paymentsData[borrowerName] && paymentsData[borrowerName][bankName]) {
-    lumSumPaid = paymentsData[borrowerName][bankName].reduce((previousValue, currentValue) => {
-      return currentValue.emiNumber <= emiNumber ? previousValue + currentValue.lumpSumAmount : previousValue;
-    }, 0);
+  constructor(balance: BalanceModel) {
+    super(balance);
+    this.emiNumber = balance.emiNumber;
   }
 
-  const potentialAmountPaid = (emi * emiNumber) + lumSumPaid;
-  const amountPaid = potentialAmountPaid < amount ? potentialAmountPaid : amount;
-  const potentialPendingEmiCount = noOfYears * 12 - emiNumber - Math.floor(lumSumPaid / emi);
-  const pendingEmiCount = potentialPendingEmiCount < 0 ? 0 : potentialPendingEmiCount;
+  displayBalance() {
+    let { borrowerName, bankName, emiNumber } = this;
+    const dbInstance = new DbController();
 
-  console.log(bankName, borrowerName, amountPaid, pendingEmiCount);
 
-};
+    const loanData = dbInstance.fetchLoanData(bankName, borrowerName);
+    const previousPayments = dbInstance.fetchPaymentData(bankName, borrowerName);
+
+    let lumSumPaid = 0;
+
+    if (previousPayments) {
+      lumSumPaid = previousPayments.reduce((previousPayment, currentPayment) => {
+        return currentPayment.emiNumber <= emiNumber ? previousPayment + currentPayment.lumpSumAmount : previousPayment;
+      }, 0);
+    }
+
+    if(loanData) {
+      const { noOfYears, emi, amount } = loanData;
+      const potentialAmountPaid = (emi * emiNumber) + lumSumPaid;
+      const amountPaid = potentialAmountPaid < amount ? potentialAmountPaid : amount;
+      const potentialPendingEmiCount = noOfYears * 12 - emiNumber - Math.floor(lumSumPaid / emi);
+      const pendingEmiCount = potentialPendingEmiCount < 0 ? 0 : potentialPendingEmiCount;
+
+      console.log(bankName, borrowerName, amountPaid, pendingEmiCount);
+    }
+  }
+}
+
+export default BalanceController;

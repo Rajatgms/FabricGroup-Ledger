@@ -1,23 +1,41 @@
 import { PaymentModel } from '../models/commandModel';
-import { loansData, paymentsData } from '../db/data';
+import DbController from './dbController';
+import Base from './baseController';
 
-export const paymentController = (payment: PaymentModel):void => {
-  let { bankName, borrowerName, lumpSumAmount, emiNumber } = payment;
+interface IPaymentController {
+  lumpSumAmount: number,
+  emiNumber: number,
+  addPayment: () => void
+}
 
-  const { amount, emi } = loansData[borrowerName][bankName];
-  const pendingAmount = amount - (emiNumber * emi);
+class PaymentController extends Base implements IPaymentController {
+  lumpSumAmount: number;
+  emiNumber: number;
 
-  if (!paymentsData[borrowerName]) {
-    paymentsData[borrowerName] = {};
+  constructor(payment: PaymentModel) {
+    super(payment);
+    this.lumpSumAmount = payment.lumpSumAmount;
+    this.emiNumber = payment.emiNumber;
   }
 
-  if (!paymentsData[borrowerName][bankName]) {
-    paymentsData[borrowerName][bankName] = [];
-  }
+  addPayment() {
+    let { bankName, borrowerName, lumpSumAmount, emiNumber } = this;
 
-  if (lumpSumAmount > pendingAmount) {
-    console.log('WARNING Lump Sum Amount exceed the pending Amount');
-  } else {
-    paymentsData[borrowerName][bankName].push({ lumpSumAmount, emiNumber });
+    const dbInstance = new DbController();
+
+    const loanData = dbInstance.fetchLoanData(bankName, borrowerName);
+
+    if (loanData) {
+      const { amount, emi } = loanData;
+      const pendingAmount = amount - (emiNumber * emi);
+
+      if (lumpSumAmount > pendingAmount) {
+        console.log('WARNING Lump Sum Amount exceed the pending Amount');
+      } else {
+        dbInstance.addPaymentData(bankName, borrowerName, { lumpSumAmount, emiNumber });
+      }
+    }
   }
 }
+
+export default PaymentController;
