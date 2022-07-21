@@ -1,1 +1,3 @@
-To run code - npm start `txt filepath`
+To run code - 
+- npm install --silent
+- npm start `text_file_path`
